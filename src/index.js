@@ -20,7 +20,11 @@ const onInput = debounce(evt => {
   }
   fetchCountries(name)
     .then(choiceCountry)
-    .catch(error => console.log(error));
+    .catch(error => {
+      Notiflix.Notify.failure('Oops, there is no country with that name');
+      refs.container.innerHTML = '';
+      refs.list.innerHTML = '';
+    });
 }, DEBOUNCE_DELAY);
 
 function choiceCountry(countries) {
@@ -37,7 +41,7 @@ function choiceCountry(countries) {
     refs.list.innerHTML = '';
     return renderCountryInfo(countries);
   }
-  if (arrLength > 1) {
+  if (arrLength >= 2 && arrLength <= 10) {
     refs.container.innerHTML = '';
     return renderCountriesAll(countries);
   }
@@ -53,7 +57,7 @@ function renderCountryInfo(countries) {
       <h2 class="country-title">${country.name.official}</h2></div>
             <p><b>Capital</b>: ${country.capital}</p>
             <p><b>Population</b>: ${country.population}</p>
-            <p><b>Languages</b>: ${Object.values(country.languages)}</p>`;
+            <p><b>Languages</b>: ${Object.values(country.languages).join(', ')}</p>`;
     })
     .join('');
   refs.container.innerHTML = markup;
@@ -71,3 +75,7 @@ function renderCountriesAll(countries) {
 }
 
 refs.searchInput.addEventListener('input', onInput);
+
+
+        
+      
